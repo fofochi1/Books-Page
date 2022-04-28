@@ -90,25 +90,46 @@ BASE_URL = "https://www.googleapis.com/books/v1/volumes?q="
 
 @app.route("/")
 def home():
-    call_books_api()
-    # response = requests.get(
-    #     "https://www.googleapis.com/books/v1/volumes?q=mistborn+inauthor:sanderson&key="
-    #     + API
-    # )
-    # print(json.dumps(response.json(), indent=4))
-    # res = json.dumps(response.json(), indent=4)
     return render_template("home.html")
 
 
-def call_books_api():
-    book_search = "the once and future king"
+@app.route("/book_name_form", methods=["POST"])
+def book_form_search():
+    """
+    Function gets user inputs from form and sends to function call_books_api for API call
+    """
+    book_name = request.form.get("bookname")
+    author_name = request.form.get("author")
+    data = call_books_api(book_name, author_name)
+    return render_template("books_result.html", data=data)
+
+
+def call_books_api(book_search, author_name):
+    """
+    API call to google books.
+    Send response to sort_through_results
+    Return data received from sort_through_results to book_form_search
+    """
     edited_book_search = book_search.replace(" ", "+")
-    author = "white"
     response = requests.get(
-        BASE_URL + edited_book_search + "+inauthor:" + author + "&key=" + os.getenv("GOOGLE_BOOKS_KEY")
+        BASE_URL
+        + edited_book_search
+        + "+inauthor:"
+        + author_name
+        + "&key="
+        + os.getenv("GOOGLE_BOOKS_KEY")
     )
     print(json.dumps(response.json(), indent=4))
-    return json.dumps(response.json(), indent=4)
+    data = sort_through_results(response.json())
+    return data
+
+
+def sort_through_results(response):
+    """
+    work on api response and sorting through json response
+    return sorted data back to call_books_api
+    """
+    return None
 
 
 # @app.route("/homepage", methods=["POST", "GET"])

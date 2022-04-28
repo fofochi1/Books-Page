@@ -10,6 +10,13 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
+        <form action="/book_name_form" method="POST">
+            <label for="bookname">Book Title:</label><br>
+            <input type="text" id="bookname" name="bookname" value="Title"><br>
+            <label for="author">Author:</label><br>
+            <input type="text" id="author" name="author" value="Author"><br><br>
+            <input type="submit" value="Submit">
+          </form> 
         <p>{{res}}</p>
         <script src="" async defer></script>
     </body>
